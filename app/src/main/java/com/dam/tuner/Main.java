@@ -2,9 +2,10 @@ package com.dam.tuner;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.widget.TextView;
 
 public class Main extends Activity
 {
@@ -37,5 +38,20 @@ public class Main extends Activity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void onResume ()
+    {
+        super.onResume();
+
+        AudioRecorder recorder = new AudioRecorder(this);
+        recorder.execute();
+    }
+
+
+    public void actualizarFrecuencia(double frecuencia)
+    {
+        TextView textView = (TextView) findViewById(R.id.frecuencia);
+        textView.setText(frecuencia + " Hz");
     }
 }
