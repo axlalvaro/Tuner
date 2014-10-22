@@ -10,11 +10,6 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     public ApplicationTest() {
         super(Application.class);
     }
-   /* Algo gordo
-            adslkdaslkjadlksklasd
+   /* KIKETTASS ES UN GAYLORD*/
 
-    daslkklnadslnkadsknladsm
-                    adsñadsklklnasdnlads
-    lndasnasnasdjbkbjadsaslndansdaslkdanks
-                            asdlknalsndnlasd*/
 }
