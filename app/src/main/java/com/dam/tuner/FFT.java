@@ -91,15 +91,19 @@ public class FFT
         int indiceSuperior = 0;
         double valorSuperior = Math.sqrt(re[0]*re[0] + im[0]*im[0]);
 
+        double mag[] = new double[re.length/2];
+
         for (int i = 1; i < re.length / 2; i++)
         {
-            double modulo = Math.sqrt(re[i]*re[i] + im[i]*im[i]);
+            double modulo = Math.sqrt((re[i]*re[i]) + (im[i]*im[i]));
+
+            mag[i] = modulo;
 
             if (modulo > valorSuperior)
                 indiceSuperior = i;
         }
 
-        frecuencia = ((double)AudioRecorder.frequency/(double)AudioRecorder.blockSize) * (double)indiceSuperior;
+        frecuencia = ((double)AudioRecorder.frequency/((double)AudioRecorder.blockSize*(double)AudioRecorder.NUM_ITERATIONS)) * (double)indiceSuperior;
 
         return frecuencia;
     }
