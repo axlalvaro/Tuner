@@ -12,7 +12,6 @@ public class AudioRecorder extends AsyncTask<Void, double[], Void>
     int channelConfiguration = AudioFormat.CHANNEL_IN_MONO;
     int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
     public static final int blockSize = 16384;
-    public static final int NUM_ITERATIONS = 1;
     public static int bufferSize;
 
     public boolean started = false;
@@ -79,11 +78,6 @@ public class AudioRecorder extends AsyncTask<Void, double[], Void>
         double re[] = toTransform[0];
         double im[] = new double[re.length];
 
-        /*for (int i = 0; i < re.length; i++)
-        {
-            Log.e("Tuner", i + " -> " + re[i]);
-        }*/
-
         double reW[] = transformador.hamming(re);
         transformador.fft(reW, im);
         double mag[] = new double[re.length/2];
@@ -92,7 +86,6 @@ public class AudioRecorder extends AsyncTask<Void, double[], Void>
         if (frecuencia < 1100.0 && frecuencia != 0.0)
         {
             main.actualizarFrecuencia(frecuencia);
-            //Log.i("Tuner", String.valueOf(frecuencia));
         }
 
         main.actualizarGrafica(mag);

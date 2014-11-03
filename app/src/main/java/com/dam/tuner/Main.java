@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.jjoe64.graphview.*;
 
+import java.text.DecimalFormat;
+
 public class Main extends Activity implements View.OnClickListener
 {
     private AudioRecorder recorder;
@@ -81,6 +83,7 @@ public class Main extends Activity implements View.OnClickListener
                 graphView.setAlpha(0);
                 graphView = null;
                 recorder.started = false;
+                boton.setText("START");
 
                 break;
         }
@@ -120,7 +123,9 @@ public class Main extends Activity implements View.OnClickListener
 
     public void actualizarFrecuencia(double frec)
     {
-        frecuencia.setText(frec + " Hz");
+        DecimalFormat decFormat = new DecimalFormat("#.0");
+        String f = decFormat.format(frec);
+        frecuencia.setText(f + " Hz");
     }
 
     private void crearGrafica()
