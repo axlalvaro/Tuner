@@ -49,7 +49,7 @@ public class AudioRecorder extends AsyncTask<Void, double[], Void>
                         int bufferReadResult = audioRecord.read(buffer, 0, blockSize);
                         toTransform = new double[bufferReadResult];
 
-                        for (int j = 0; j < bufferReadResult; j++) {
+                        for (int j = 0; j < bufferReadResult; j++){
                             toTransform[j] = (double) buffer[j] / 32768.0; // signed 16 bit (2^15)
                         }
 
@@ -84,13 +84,17 @@ public class AudioRecorder extends AsyncTask<Void, double[], Void>
             Log.e("Tuner", i + " -> " + re[i]);
         }*/
 
-        transformador.fft(re, im);
-        double frecuencia = transformador.calcularFrecuencia(re, im);
+        double reW[] = transformador.hamming(re);
+        transformador.fft(reW, im);
+        double mag[] = new double[re.length/2];
+        double frecuencia = transformador.calcularFrecuencia(reW, im, mag);
 
-        if (frecuencia < 1000.0 && frecuencia != 0.0)
+        if (frecuencia < 1100.0 && frecuencia != 0.0)
         {
             main.actualizarFrecuencia(frecuencia);
-            Log.e("Tuner", String.valueOf(frecuencia));
+            //Log.i("Tuner", String.valueOf(frecuencia));
         }
+
+        main.actualizarGrafica(mag);
     }
 }

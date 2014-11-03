@@ -84,14 +84,14 @@ public class FFT
         }
     }
 
-    public double calcularFrecuencia(double[] re, double[] im)
+    public double calcularFrecuencia(double[] re, double[] im, double[] mag)
     {
         double frecuencia = 0.0;
 
         int indiceSuperior = 0;
         double valorSuperior = Math.sqrt(re[0]*re[0] + im[0]*im[0]);
 
-        double mag[] = new double[re.length/2];
+        mag[0] = valorSuperior;
 
         for (int i = 1; i < re.length / 2; i++)
         {
@@ -100,7 +100,10 @@ public class FFT
             mag[i] = modulo;
 
             if (modulo > valorSuperior)
+            {
+                valorSuperior = modulo;
                 indiceSuperior = i;
+            }
         }
 
         frecuencia = ((double)AudioRecorder.frequency/((double)re.length)) * (double)indiceSuperior;
@@ -109,15 +112,17 @@ public class FFT
     }
 
 
-    private static double[] aplicaHamming(double[] datos)
+    public static double[] hamming(double[] datos)
     {
         double A0 = 0.53836;
         double A1 = 0.46164;
-        int Nbf = datos.length;
-        for (int k = 0; k < Nbf; k++)
+        int N = datos.length;
+
+        for (int k = 0; k < N; k++)
         {
-            datos[k] = datos[k] * (A0 - A1 * Math.cos(2 * Math.PI * k / (Nbf - 1)));
+            datos[k] = datos[k] * (A0-A1 * Math.cos(2 * Math.PI * k / (N - 1)));
         }
+
         return datos;
     }
 }

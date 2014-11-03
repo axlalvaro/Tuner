@@ -1,18 +1,27 @@
 package com.dam.tuner;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.jjoe64.graphview.*;
 
 public class Main extends Activity implements View.OnClickListener
 {
-    AudioRecorder recorder;
-    Button boton;
+    private AudioRecorder recorder;
+    private Button boton, botonAnalizador, botonClose;
+    private TextView frecuencia;
+    private GraphView graphView;
+    private OrientationEventListener orientationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -22,8 +31,14 @@ public class Main extends Activity implements View.OnClickListener
 
         recorder = new AudioRecorder(this);
 
-        boton = (Button)findViewById(R.id.button);
+        frecuencia = (TextView) findViewById(R.id.frecuencia);
+        boton = (Button) findViewById(R.id.button);
         boton.setOnClickListener(this);
+        botonAnalizador = (Button) findViewById(R.id.buttonAnalizador);
+        botonAnalizador.setOnClickListener(this);
+        botonClose = (Button) findViewById(R.id.buttonClose);
+        botonClose.setOnClickListener(this);
+        botonClose.setAlpha(0);
     }
 
     public void onClick (View view)
@@ -43,6 +58,31 @@ public class Main extends Activity implements View.OnClickListener
                 }
 
                 break;
+
+            case R.id.buttonAnalizador:
+
+                boton.setAlpha(0);
+                frecuencia.setAlpha(0);
+                botonAnalizador.setAlpha(0);
+                botonClose.setAlpha(1);
+
+                crearGrafica();
+                recorder.started = true;
+
+                break;
+
+            case R.id.buttonClose:
+
+                boton.setAlpha(1);
+                frecuencia.setAlpha(1);
+                botonAnalizador.setAlpha(1);
+                botonClose.setAlpha(0);
+
+                graphView.setAlpha(0);
+                graphView = null;
+                recorder.started = false;
+
+                break;
         }
     }
 
@@ -52,7 +92,7 @@ public class Main extends Activity implements View.OnClickListener
     {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        return false;
     }
 
     @Override
@@ -73,13 +113,46 @@ public class Main extends Activity implements View.OnClickListener
     {
         super.onResume();
 
-        recorder.execute();
+        if (recorder.getStatus() != AsyncTask.Status.RUNNING)
+            recorder.execute();
     }
 
 
-    public void actualizarFrecuencia(double frecuencia)
+    public void actualizarFrecuencia(double frec)
     {
-        TextView textView = (TextView) findViewById(R.id.frecuencia);
-        textView.setText(frecuencia + " Hz");
+        frecuencia.setText(frec + " Hz");
+    }
+
+    private void crearGrafica()
+    {
+        graphView = new LineGraphView( this, "Analizador" );
+        graphView.setShowVerticalLabels(false);
+        graphView.setScalable(true);
+        graphView.setScrollable(true);
+        graphView.getGraphViewStyle().setGridStyle(GraphViewStyle.GridStyle.VERTICAL);
+
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout);
+        layout.addView(graphView, 0);
+    }
+
+    public void actualizarGrafica(double[] pintar)
+    {
+        if (graphView != null)
+        {
+            graphView.removeAllSeries();
+
+            GraphViewSeries serie;
+            GraphView.GraphViewData[] datos = new GraphView.GraphViewData[pintar.length];
+
+            for (int i = 0; i < pintar.length; i++)
+            {
+                datos[i] = new GraphView.GraphViewData(i, pintar[i]);
+            }
+
+            serie = new GraphViewSeries(datos);
+            serie.getStyle().color = Color.argb(255,187,117,221);
+
+            graphView.addSeries(serie);
+        }
     }
 }
