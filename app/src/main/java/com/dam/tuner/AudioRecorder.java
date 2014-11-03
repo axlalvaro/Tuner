@@ -11,7 +11,7 @@ public class AudioRecorder extends AsyncTask<Void, double[], Void>
     public static final int frequency = 8000;
     int channelConfiguration = AudioFormat.CHANNEL_IN_MONO;
     int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
-    public static final int blockSize = 1024;
+    public static final int blockSize = 16384;
     public static final int NUM_ITERATIONS = 1;
     public static int bufferSize;
 
