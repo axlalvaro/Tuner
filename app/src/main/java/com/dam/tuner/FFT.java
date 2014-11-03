@@ -103,8 +103,21 @@ public class FFT
                 indiceSuperior = i;
         }
 
-        frecuencia = ((double)AudioRecorder.frequency/((double)AudioRecorder.blockSize*(double)AudioRecorder.NUM_ITERATIONS)) * (double)indiceSuperior;
+        frecuencia = ((double)AudioRecorder.frequency/((double)AudioRecorder.bufferSize)) * (double)indiceSuperior;
 
         return frecuencia;
+    }
+
+
+    private static double[] aplicaHamming(double[] datos)
+    {
+        double A0 = 0.53836;
+        double A1 = 0.46164;
+        int Nbf = datos.length;
+        for (int k = 0; k < Nbf; k++)
+        {
+            datos[k] = datos[k] * (A0 - A1 * Math.cos(2 * Math.PI * k / (Nbf - 1)));
+        }
+        return datos;
     }
 }

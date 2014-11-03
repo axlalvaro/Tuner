@@ -11,8 +11,9 @@ public class AudioRecorder extends AsyncTask<Void, double[], Void>
     public static final int frequency = 8000;
     int channelConfiguration = AudioFormat.CHANNEL_IN_MONO;
     int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
-    public static final int blockSize = 256;
+    public static final int blockSize = 1024;
     public static final int NUM_ITERATIONS = 1;
+    public static int bufferSize;
 
     boolean started = true;
 
@@ -22,37 +23,30 @@ public class AudioRecorder extends AsyncTask<Void, double[], Void>
     public AudioRecorder (Main m)
     {
         main = m;
-        transformador = new FFT(blockSize);
+        transformador = new FFT(blockSize/2);
     }
 
     protected Void doInBackground(Void... arg0)
     {
         try
         {
-            // int bufferSize = AudioRecord.getMinBufferSize(frequency,
-            // AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
-            int bufferSize = AudioRecord.getMinBufferSize(frequency,
-                    channelConfiguration, audioEncoding);
+            bufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
 
-            AudioRecord audioRecord = new AudioRecord(
-                    MediaRecorder.AudioSource.MIC, frequency,
-                    channelConfiguration, audioEncoding, bufferSize);
+            AudioRecord audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, frequency, channelConfiguration, audioEncoding, blockSize);
 
             short[] buffer = new short[blockSize];
-            double[] toTransform = new double[blockSize*NUM_ITERATIONS];
+            double[] toTransform;
 
             audioRecord.startRecording();
 
             while (started)
             {
-                for (int i = 0; i < NUM_ITERATIONS; i++)
-                {
-                    int bufferReadResult = audioRecord.read(buffer, 0, blockSize);
+                int bufferReadResult = audioRecord.read(buffer, 0, blockSize);
+                toTransform = new double[bufferReadResult];
 
-                    for (int j = 0; j < blockSize && j < bufferReadResult; j++)
-                    {
-                        toTransform[(blockSize*i) + j] = (double) buffer[j] / 32768.0; // signed 16 bit (2^15)
-                    }
+                for (int j = 0; j < bufferReadResult; j++)
+                {
+                    toTransform[j] = (double) buffer[j] / 32768.0; // signed 16 bit (2^15)
                 }
 
                 publishProgress(toTransform);
@@ -73,7 +67,7 @@ public class AudioRecorder extends AsyncTask<Void, double[], Void>
     protected void onProgressUpdate(double[]... toTransform)
     {
         double re[] = toTransform[0];
-        double im[] = new double[blockSize*NUM_ITERATIONS];
+        double im[] = new double[re.length];
 
         /*for (int i = 0; i < re.length; i++)
         {
