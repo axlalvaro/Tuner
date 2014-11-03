@@ -15,10 +15,11 @@ public class AudioRecorder extends AsyncTask<Void, double[], Void>
     public static final int NUM_ITERATIONS = 1;
     public static int bufferSize;
 
-    boolean started = true;
+    public boolean started = false;
 
     private FFT transformador;
     private Main main;
+    private AudioRecord audioRecord;
 
     public AudioRecorder (Main m)
     {
@@ -30,30 +31,39 @@ public class AudioRecorder extends AsyncTask<Void, double[], Void>
     {
         try
         {
-            bufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
-
-            AudioRecord audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, frequency, channelConfiguration, audioEncoding, blockSize);
-
-            short[] buffer = new short[blockSize];
-            double[] toTransform;
-
-            audioRecord.startRecording();
-
-            while (started)
+            while (true)
             {
-                int bufferReadResult = audioRecord.read(buffer, 0, blockSize);
-                toTransform = new double[bufferReadResult];
-
-                for (int j = 0; j < bufferReadResult; j++)
+                if (started)
                 {
-                    toTransform[j] = (double) buffer[j] / 32768.0; // signed 16 bit (2^15)
+                    bufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
+
+                    audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, frequency, channelConfiguration, audioEncoding, blockSize);
+
+                    short[] buffer = new short[blockSize];
+                    double[] toTransform;
+
+                    audioRecord.startRecording();
+
+                    while (started)
+                    {
+                        int bufferReadResult = audioRecord.read(buffer, 0, blockSize);
+                        toTransform = new double[bufferReadResult];
+
+                        for (int j = 0; j < bufferReadResult; j++) {
+                            toTransform[j] = (double) buffer[j] / 32768.0; // signed 16 bit (2^15)
+                        }
+
+                        publishProgress(toTransform);
+                    }
                 }
-
-                publishProgress(toTransform);
+                else
+                {
+                    if (audioRecord != null && audioRecord.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING)
+                    {
+                        audioRecord.stop();
+                    }
+                }
             }
-
-            audioRecord.stop();
-
         }
         catch (Throwable t)
         {

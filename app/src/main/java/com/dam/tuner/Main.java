@@ -5,16 +5,45 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
-public class Main extends Activity
+public class Main extends Activity implements View.OnClickListener
 {
+    AudioRecorder recorder;
+    Button boton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        recorder = new AudioRecorder(this);
+
+        boton = (Button)findViewById(R.id.button);
+        boton.setOnClickListener(this);
+    }
+
+    public void onClick (View view)
+    {
+        switch (view.getId())
+        {
+            case R.id.button:
+                if (recorder.started)
+                {
+                    recorder.started = false;
+                    boton.setText("START");
+                }
+                else
+                {
+                    recorder.started = true;
+                    boton.setText("STOP");
+                }
+
+                break;
+        }
     }
 
 
@@ -44,7 +73,6 @@ public class Main extends Activity
     {
         super.onResume();
 
-        AudioRecorder recorder = new AudioRecorder(this);
         recorder.execute();
     }
 

@@ -103,7 +103,7 @@ public class FFT
                 indiceSuperior = i;
         }
 
-        frecuencia = ((double)AudioRecorder.frequency/((double)AudioRecorder.bufferSize)) * (double)indiceSuperior;
+        frecuencia = ((double)AudioRecorder.frequency/((double)re.length)) * (double)indiceSuperior;
 
         return frecuencia;
     }
