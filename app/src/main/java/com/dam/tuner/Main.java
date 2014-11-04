@@ -21,7 +21,7 @@ public class Main extends Activity implements View.OnClickListener
 {
     private AudioRecorder recorder;
     private Button boton, botonAnalizador, botonClose;
-    private TextView frecuencia;
+    private TextView frecuencia, potencia;
     private GraphView graphView;
     private OrientationEventListener orientationListener;
 
@@ -34,6 +34,7 @@ public class Main extends Activity implements View.OnClickListener
         recorder = new AudioRecorder(this);
 
         frecuencia = (TextView) findViewById(R.id.frecuencia);
+        potencia = (TextView) findViewById(R.id.potencia);
         boton = (Button) findViewById(R.id.button);
         boton.setOnClickListener(this);
         botonAnalizador = (Button) findViewById(R.id.buttonAnalizador);
@@ -123,9 +124,12 @@ public class Main extends Activity implements View.OnClickListener
 
     public void actualizarFrecuencia(double frec)
     {
-        DecimalFormat decFormat = new DecimalFormat("#.0");
-        String f = decFormat.format(frec);
-        frecuencia.setText(f + " Hz");
+        frecuencia.setText(format1Decimal(frec) + " Hz");
+    }
+
+    public void actualizarPotencia(double pot)
+    {
+        potencia.setText(format1Decimal(pot) + " dB");
     }
 
     private void crearGrafica()
@@ -159,5 +163,13 @@ public class Main extends Activity implements View.OnClickListener
 
             graphView.addSeries(serie);
         }
+    }
+
+    private String format1Decimal(double value)
+    {
+        DecimalFormat decFormat = new DecimalFormat("#.0");
+        String f = decFormat.format(value);
+
+        return f;
     }
 }

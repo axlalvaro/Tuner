@@ -84,7 +84,7 @@ public class FFT
         }
     }
 
-    public double calcularFrecuencia(double[] re, double[] im, double[] mag)
+    public double calcularFrecuenciaYPot(double[] re, double[] im, double[] mag, double[] pot)
     {
         double frecuencia = 0.0;
 
@@ -107,6 +107,7 @@ public class FFT
         }
 
         frecuencia = ((double)AudioRecorder.frequency/((double)re.length)) * (double)indiceSuperior;
+        pot[0] = 20*Math.log10(mag[indiceSuperior]);
 
         return frecuencia;
     }
