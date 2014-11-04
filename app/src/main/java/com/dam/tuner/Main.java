@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.OrientationEventListener;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -23,7 +22,6 @@ public class Main extends Activity implements View.OnClickListener
     private Button boton, botonAnalizador, botonClose;
     private TextView frecuencia, potencia;
     private GraphView graphView;
-    private OrientationEventListener orientationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,7 +39,7 @@ public class Main extends Activity implements View.OnClickListener
         botonAnalizador.setOnClickListener(this);
         botonClose = (Button) findViewById(R.id.buttonClose);
         botonClose.setOnClickListener(this);
-        botonClose.setAlpha(0);
+        botonClose.setVisibility(View.GONE);
     }
 
     public void onClick (View view)
@@ -95,7 +93,6 @@ public class Main extends Activity implements View.OnClickListener
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return false;
     }
@@ -103,9 +100,6 @@ public class Main extends Activity implements View.OnClickListener
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings)
         {
