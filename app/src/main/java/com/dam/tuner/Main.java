@@ -64,10 +64,11 @@ public class Main extends Activity implements View.OnClickListener
 
             case R.id.buttonAnalizador:
 
-                boton.setAlpha(0);
-                frecuencia.setAlpha(0);
-                botonAnalizador.setAlpha(0);
-                botonClose.setAlpha(1);
+                boton.setVisibility(View.GONE);
+                //frecuencia.setVisibility(View.GONE);
+                botonAnalizador.setVisibility(View.GONE);
+                botonClose.setVisibility(View.VISIBLE);
+
 
                 crearGrafica();
                 recorder.started = true;
@@ -76,12 +77,12 @@ public class Main extends Activity implements View.OnClickListener
 
             case R.id.buttonClose:
 
-                boton.setAlpha(1);
-                frecuencia.setAlpha(1);
-                botonAnalizador.setAlpha(1);
-                botonClose.setAlpha(0);
+                boton.setVisibility(View.VISIBLE);
+                frecuencia.setVisibility(View.VISIBLE);
+                botonAnalizador.setVisibility(View.VISIBLE);
+                botonClose.setVisibility(View.GONE);
 
-                graphView.setAlpha(0);
+                graphView.setVisibility(View.GONE);
                 graphView = null;
                 recorder.started = false;
                 boton.setText("START");
@@ -124,12 +125,12 @@ public class Main extends Activity implements View.OnClickListener
 
     public void actualizarFrecuencia(double frec)
     {
-        frecuencia.setText(format1Decimal(frec) + " Hz");
+        frecuencia.setText(format2Decimal(frec) + " Hz");
     }
 
     public void actualizarPotencia(double pot)
     {
-        potencia.setText(format1Decimal(pot) + " dB");
+        potencia.setText(format2Decimal(pot) + " dB");
     }
 
     private void crearGrafica()
@@ -151,9 +152,9 @@ public class Main extends Activity implements View.OnClickListener
             graphView.removeAllSeries();
 
             GraphViewSeries serie;
-            GraphView.GraphViewData[] datos = new GraphView.GraphViewData[pintar.length];
+            GraphView.GraphViewData[] datos = new GraphView.GraphViewData[pintar.length / 4];
 
-            for (int i = 0; i < pintar.length; i++)
+            for (int i = 0; i < pintar.length / 4; i++)
             {
                 datos[i] = new GraphView.GraphViewData(i, pintar[i]);
             }
@@ -165,9 +166,9 @@ public class Main extends Activity implements View.OnClickListener
         }
     }
 
-    private String format1Decimal(double value)
+    private String format2Decimal(double value)
     {
-        DecimalFormat decFormat = new DecimalFormat("#.0");
+        DecimalFormat decFormat = new DecimalFormat("#.00");
         String f = decFormat.format(value);
 
         return f;

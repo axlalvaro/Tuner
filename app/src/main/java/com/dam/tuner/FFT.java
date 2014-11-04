@@ -126,4 +126,16 @@ public class FFT
 
         return datos;
     }
+
+    public static double[] blackman(double[] datos)
+    {
+        int N = datos.length;
+
+        for (int k = 0; k < N; k++)
+        {
+            datos[k] = datos[k] * ( 0.42-0.5 * Math.cos((2*Math.PI*k)/(N-1)) + 0.08*Math.cos((4*Math.PI*k)/(N-1)));
+        }
+
+        return datos;
+    }
 }
