@@ -113,7 +113,19 @@ public class FFT
     }
 
 
-    public static double[] hamming(double[] datos)
+    public double[] rectangular(double[] datos)
+    {
+        int N = datos.length;
+
+        for (int k = 0; k < N; k++)
+        {
+            datos[k] = datos[k] * (1.0);
+        }
+
+        return datos;
+    }
+
+    public double[] hamming(double[] datos)
     {
         double A0 = 0.53836;
         double A1 = 0.46164;
@@ -127,7 +139,7 @@ public class FFT
         return datos;
     }
 
-    public static double[] blackman(double[] datos)
+    public double[] blackman(double[] datos)
     {
         int N = datos.length;
 

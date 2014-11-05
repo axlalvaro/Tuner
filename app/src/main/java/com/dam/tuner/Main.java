@@ -199,7 +199,7 @@ public class Main extends ActionBarActivity implements View.OnClickListener{
         graphView.setShowVerticalLabels(false);
         graphView.setScalable(true);
         graphView.setScrollable(true);
-        graphView.getGraphViewStyle().setGridStyle(GraphViewStyle.GridStyle.VERTICAL);
+        graphView.getGraphViewStyle().setGridStyle(GraphViewStyle.GridStyle.NONE);
 
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout);
         layout.addView(graphView, 0);
