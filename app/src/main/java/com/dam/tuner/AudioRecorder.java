@@ -79,7 +79,7 @@ public class AudioRecorder extends AsyncTask<Void, double[], Void>
         double re[] = toTransform[0];
         double im[] = new double[re.length];
 
-        double reW[] = transformador.blackman(re);
+        double reW[] = transformador.hamming(re);
         transformador.fft(reW, im);
         double mag[] = new double[re.length/2];
         double potencia[] = new double[1];
